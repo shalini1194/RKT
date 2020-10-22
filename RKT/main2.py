@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-执行模型训练、测试等
-"""
 # from comet_ml import Experiment
 # experiment = Experiment(api_key="MCyyqYKWkKKMm0O15B1BadVOg",
   #                      project_name="general", workspace="shalini1194")
