@@ -30,7 +30,7 @@ def get_data(df, file2, max_length, train_split=0.8, randomize=True):
         train_split (float): proportion of data to use for training
     """
 
-    pro_pro_sparse = sparse.load_npz('../../PEBG-master/ednet/pro_pro_sparse.npz')
+    pro_pro_sparse = sparse.load_npz('../data/pro_pro_sparse.npz')
 
     pro_pro_coo = pro_pro_sparse.tocoo()
     # print(pro_skill_csr)
@@ -144,23 +144,16 @@ def computeRePos(time_seq, time_span):
 
     return (time_matrix)
 def get_corr_data(pro_num):
-    pro_pro_sparse = sparse.load_npz('../../PEBG-master/ednet/pro_pro_sparse.npz')
-
-    pro_pro_coo = pro_pro_sparse.tocoo()
-    # print(pro_skill_csredd)
-
-
-
-    pro_pro_dense = pro_pro_coo.toarray()
-    # pro_pro_dense = np.zeros((pro_num, pro_num))
+    pro_pro_dense = np.zeros((pro_num, pro_num))
     pro_pro_ = open('../../KT-GAT/ednet_corr')
     for i in pro_pro_:
-        j=i.strip().split(',')
-        pro_pro_dense[int(j[0])][int(j[1])]+=int(float(j[2]))
+        j = i.strip().split(',')
+        pro_pro_dense[int(j[0])][int(j[1])] += int(float(j[2]))
     return pro_pro_dense
 
+
 def train(train_data, val_data, pro_num, timestamp, timespan,  model, optimizer, logger, saver, num_epochs, batch_size, grad_clip):
-    """Train SAKT model.
+    """Train RKT model.
     Arguments:
         train_data (list of tuples of torch Tensor)
         val_data (list of tuples of torch Tensor)
@@ -278,13 +271,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # full_df = pd.read_csv('../../KT-GAT/data/ed_net2.csv', sep=",")
-    # train_df = pd.read_csv('../../KT-GAT/data/ed_net2_train.csv', sep=",")
-    # test_df = pd.read_csv('../../KT-GAT/data/ed_net2_test.csv', sep=",")
-    # # train_data_file = '../KT-GAT/data/ed_net.csv'
-    # corr_dic, train_data, val_data = get_data(train_df, '../../KT-GAT/RKT/ednet_corr', args.max_length)
+
     # print(len(train_data))
-    data = np.load('../../PEBG-master/ednet/ednet.npz')
+    data = np.load('data/ednet.npz')
 
     y, skill, problem, timestamp, real_len = data['y'], data['skill'], data['problem'], data['time'] , data['real_len']
     skill_num, pro_num = data['skill_num'], data['problem_num']
@@ -355,7 +344,5 @@ if __name__ == "__main__":
         correct = np.concatenate([correct, labels])
 
 
-    print(correct.shape)
-    print(test_preds.shape)
     print("auc_test = ", roc_auc_score(correct, test_preds))
     print("acc_test = ", accuracy_score(correct, test_preds))
